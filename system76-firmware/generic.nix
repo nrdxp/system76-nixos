@@ -1,19 +1,17 @@
-{version, rev, sha, cargoSha}:
-{ stdenv, fetchFromGitHub, fetchpatch, kernel
-, rustPlatform, cargo, cargo-vendor
-, dbus, systemd, libsodium, pkgconfig, lzma, openssl, gnumake, gcc, binutils, git
-}:
+{ version, rev, sha, cargoSha }:
+{ stdenv, fetchFromGitHub, fetchpatch, kernel, rustPlatform, cargo, dbus
+, systemd, libsodium, pkgconfig, lzma, openssl, gnumake, gcc, binutils, git }:
 
 rustPlatform.buildRustPackage {
   name = "system76-firmware-${version}";
   version = "${version}";
 
   src = fetchFromGitHub {
-      owner = "pop-os";
-      repo = "system76-firmware";
-      rev = "${rev}";
-      sha256 = "${sha}";
-    };
+    owner = "pop-os";
+    repo = "system76-firmware";
+    rev = "${rev}";
+    sha256 = "${sha}";
+  };
 
   enableParallelBuilding = true;
 
@@ -21,11 +19,20 @@ rustPlatform.buildRustPackage {
   hardeningDisable = [ "pic" ];
 
   nativeBuildInputs = kernel.moduleBuildDependencies ++ [
-    dbus systemd libsodium pkgconfig lzma openssl gnumake gcc binutils
-    cargo cargo-vendor git
+    dbus
+    systemd
+    libsodium
+    pkgconfig
+    lzma
+    openssl
+    gnumake
+    gcc
+    binutils
+    cargo
+    git
   ];
 
-  buildInputs = [ cargo cargo-vendor git ];
+  buildInputs = [ cargo git ];
 
   cargoSha256 = "${cargoSha}";
 
@@ -62,7 +69,7 @@ rustPlatform.buildRustPackage {
     maintainers = [ maintainers.stites ];
     platforms = [ "i686-linux" "x86_64-linux" ];
     description = "System76 Firmware Tool and Daemon";
-    homepage = https://github.com/pop-os/system76-firmware;
+    homepage = "https://github.com/pop-os/system76-firmware";
     longDescription = ''
       The system76-firmware package has a CLI tool for installing firmware updates.
       Also included is the system76-firmware-daemon package, which has a systemd service
